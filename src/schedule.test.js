@@ -1,0 +1,10 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {dateKey,slotsFor} from './schedule.js';
+const date=new Date(2030,0,6,12), now=new Date(2029,0,1);
+const settings={days:[0],start:9,end:11,duration:30};
+test('creates slots within available hours',()=>{assert.deepEqual(slotsFor(date,settings,[],now).map(s=>s.time),['09:00','09:30','10:00','10:30'])});
+test('closed days have no slots',()=>{assert.equal(slotsFor(new Date(2030,0,7),settings,[],now).length,0)});
+test('overlapping bookings block all intersecting slots',()=>{const bookings=[{date:dateKey(date),minute:9*60+15,duration:60}];assert.deepEqual(slotsFor(date,settings,bookings,now).map(s=>s.time),['10:30'])});
+test('past slots are not bookable',()=>{assert.deepEqual(slotsFor(date,settings,[],new Date(2030,0,6,10)).map(s=>s.time),['10:30'])});
+test('appointments never extend past closing',()=>{assert.deepEqual(slotsFor(date,{...settings,duration:45},[],now).map(s=>s.time),['09:00','09:45'])});
