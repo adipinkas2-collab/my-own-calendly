@@ -1,0 +1,1 @@
+{"name":"my-own-calendly","version":"0.1.0","private":true,"description":"Personal booking page for Adi","scripts":{"start":"node server.js","test":"node --test"},"engines":{"node":">=22.13.0"},"license":"UNLICENSED"}
